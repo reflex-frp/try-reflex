@@ -151,6 +151,13 @@ rec {
     inherit nixpkgs;
   };
 
+  haskell-language-server = import ./haskell-language-server {
+    inherit haskellLib;
+    inherit fetchFromGitHub;
+    inherit nixpkgs;
+    inherit thunkSet;
+  };
+
   wasm = import ./wasm;
 
   user-custom-pre = foldExtensions haskellOverlaysPre;
