@@ -1,0 +1,7 @@
+{
+  "owner": "haskell",
+  "repo": "haskell-language-server",
+  "rev": "0.8.0",
+  "sha256": "0p6fqs07lajbi2g1wf4w3j5lvwknnk58n12vlg48cs4iz25gp588",
+  "fetchSubmodules": true
+}
