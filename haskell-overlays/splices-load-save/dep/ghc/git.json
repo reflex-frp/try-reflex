@@ -1,7 +1,8 @@
 {
   "url": "https://gitlab.haskell.org/obsidiansystems/ghc",
-  "rev": "856e342d906e39e8bf2ece1f73445f616b74946e",
-  "sha256": "1r3glwyp84agzssgr3kh0ylh098yrzjprbvfhgxwy2vsn2d2c0b3",
+  "rev": "92dc7269abbc4b9ac5b270fb15be9e491cdacd6f",
+  "sha256": "1g8a387dk7qgq996323b7ha7zvddshmhn36m683xyaqqflv1b0f4",
+  "private": false,
   "fetchSubmodules": true,
-  "branch": "wip/abrar/splices-8.6.5"
+  "branch": "reflex-platform-ghc-with-android-32-update"
 }
