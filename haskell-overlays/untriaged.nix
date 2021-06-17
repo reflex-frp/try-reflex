@@ -35,7 +35,6 @@ in self: super: {
   constrained-dynamic = self.callHackage "constrained-dynamic" "0.1.0.0" {};
   hsimport = doJailbreak (self.callHackage "hsimport" "0.10.0" {});
   webkit2gtk3-javascriptcore = self.callHackage "webkit2gtk3-javascriptcore" "0.14.2.1" {};
-  haskell-gi = self.callHackage "haskell-gi" "0.22.6" {};
 
   # Snap and deps are marked broken in 19.03 but needed by obelisk
   snap = self.callHackage "snap" "1.1.2.0" {};
@@ -49,19 +48,19 @@ in self: super: {
   bimap = self.callHackage "bimap" "0.3.3" {};
 
   # Overrides for gi-* family of libraries. See addGIDeps, above.
-  haskell-gi-base = addGIDeps (self.callHackage "haskell-gi-base" "0.22.2" {}) [nixpkgs.glib] [];
-  gi-glib = addGIDeps (self.callHackage "gi-glib" "2.0.19" {}) [] [];
-  gi-cairo = addGIDeps (self.callHackage "gi-cairo" "1.0.19" {}) [nixpkgs.cairo] [];
-  gi-gobject = addGIDeps (self.callHackage "gi-gobject" "2.0.21" {}) [] [];
-  gi-pango = addGIDeps (self.callHackage "gi-pango" "1.0.21" {}) [nixpkgs.pango] [];
-  gi-gio = addGIDeps (self.callHackage "gi-gio" "2.0.24" {}) [] [];
-  gi-atk = addGIDeps (self.callHackage "gi-atk" "2.0.20" {}) [] [];
-  gi-javascriptcore = addGIDeps (self.callHackage "gi-javascriptcore" "4.0.20" {}) [] [];
-  gi-gdkpixbuf = addGIDeps (self.callHackage "gi-gdkpixbuf" "2.0.22" {}) [nixpkgs.gdk_pixbuf nixpkgs.gtk3] [nixpkgs.gtk3];
-  gi-gdk = addGIDeps (self.callHackage "gi-gdk" "3.0.21" {}) [nixpkgs.gdk_pixbuf nixpkgs.pango nixpkgs.gtk3] [nixpkgs.gtk3];
-  gi-soup = addGIDeps (self.callHackage "gi-soup" "2.4.21" {}) [nixpkgs.gdk_pixbuf] [nixpkgs.libsoup];
-  gi-gtk = addGIDeps (self.callHackage "gi-gtk" "3.0.31" {}) [nixpkgs.gdk_pixbuf nixpkgs.gtk3] [nixpkgs.gtk3 nixpkgs.atk nixpkgs.pango];
-  gi-webkit2 = addGIDeps (self.callHackage "gi-webkit2" "4.0.24" {}) [] [nixpkgs.webkitgtk];
+  haskell-gi-base = addGIDeps (super.haskell-gi-base) [nixpkgs.glib] [];
+  gi-glib = addGIDeps (super.gi-glib) [] [];
+  gi-cairo = addGIDeps (super.gi-cairo) [nixpkgs.cairo] [];
+  gi-gobject = addGIDeps (super.gi-gobject) [] [];
+  gi-pango = addGIDeps (super.gi-pango) [nixpkgs.pango] [];
+  gi-gio = addGIDeps (super.gi-gio) [] [];
+  gi-atk = addGIDeps (super.gi-atk) [] [];
+  gi-javascriptcore = addGIDeps (super.gi-javascriptcore) [] [];
+  gi-gdkpixbuf = addGIDeps (super.gi-gdkpixbuf) [nixpkgs.gdk_pixbuf nixpkgs.gtk3] [nixpkgs.gtk3];
+  gi-gdk = addGIDeps (super.gi-gdk) [nixpkgs.gdk_pixbuf nixpkgs.pango nixpkgs.gtk3] [nixpkgs.gtk3];
+  gi-soup = addGIDeps (super.gi-soup) [nixpkgs.gdk_pixbuf] [nixpkgs.libsoup];
+  gi-gtk = addGIDeps (super.gi-gtk) [nixpkgs.gdk_pixbuf nixpkgs.gtk3] [nixpkgs.gtk3 nixpkgs.atk nixpkgs.pango];
+  gi-webkit2 = addGIDeps (super.gi-webkit2) [] [nixpkgs.webkitgtk];
 
   # Required by butcher
   deque = self.callHackage "deque" "0.4.2.3" {};
