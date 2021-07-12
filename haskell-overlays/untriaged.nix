@@ -17,69 +17,42 @@ let # Adds additional arguments to 'buildInputs' and the 'HASKELL_GI_GIR_SEARCH_
         nixpkgs.lib.concatStringsSep ":"
           (map (x: "${x.dev}/share/gir-1.0") ([nixpkgs.gobjectIntrospection] ++ girSearchPathPackages));
     });
+    nixpkgs2003 = import ../nixpkgs-20.03 {};
 in self: super: {
 
-  # Recently uploaded to hackage:
-  haven = self.callHackage "haven" "0.2.0.2" {};
-
-  # Update hlint and add new dependency
-  hlint = self.callHackage "hlint" "2.2.2" {};
-  ghc-lib-parser = self.callHackage "ghc-lib-parser" "8.8.0.20190723" {};
-  haskell-src-exts-util = self.callHackage "haskell-src-exts-util" "0.2.5" {};
-  stylish-haskell = self.callHackage "stylish-haskell" "0.9.2.2" {};
-
-  # Fixing things that are marked broken in 19.03:
-  butcher = doJailbreak (self.callHackage "butcher" "1.3.2.3" {});
-  multistate = self.callHackage "multistate" "0.8.0.2" {};
+  # Need an older version for GHC 8.6
   haddock-api = dontHaddock (doJailbreak (self.callHackage "haddock-api" "2.22.0" {}));
-  constrained-dynamic = self.callHackage "constrained-dynamic" "0.1.0.0" {};
-  hsimport = doJailbreak (self.callHackage "hsimport" "0.10.0" {});
-  webkit2gtk3-javascriptcore = self.callHackage "webkit2gtk3-javascriptcore" "0.14.2.1" {};
-  haskell-gi = self.callHackage "haskell-gi" "0.22.6" {};
+  # TODO this conflicts with the pandoc version
+  # haddock-library = doJailbreak (self.callHackage "haddock-library" "1.7.0" {});
 
-  # Snap and deps are marked broken in 19.03 but needed by obelisk
-  snap = self.callHackage "snap" "1.1.2.0" {};
-  heist = dontCheck (self.callHackage "heist" "1.1.0.1" {});
-  map-syntax = doJailbreak (self.callHackage "map-syntax" "0.3" {});
-
-  # Fixing things that are marked broken in 19.09:
-  brittany = dontCheck (self.callHackage "brittany" "0.12.0.0" {});
-  witherable = self.callHackage "witherable" "0.3.1" {};
-  time-compat = dontCheck super.time-compat;
-  bimap = self.callHackage "bimap" "0.3.3" {};
+  # Fixing things that are marked broken in 20.09:
+  constrained-dynamic = dontCheck (markUnbroken super.constrained-dynamic);
+  haven = markUnbroken super.haven;
 
   # Overrides for gi-* family of libraries. See addGIDeps, above.
-  haskell-gi-base = addGIDeps (self.callHackage "haskell-gi-base" "0.22.2" {}) [nixpkgs.glib] [];
-  gi-glib = addGIDeps (self.callHackage "gi-glib" "2.0.19" {}) [] [];
-  gi-cairo = addGIDeps (self.callHackage "gi-cairo" "1.0.19" {}) [nixpkgs.cairo] [];
-  gi-gobject = addGIDeps (self.callHackage "gi-gobject" "2.0.21" {}) [] [];
-  gi-pango = addGIDeps (self.callHackage "gi-pango" "1.0.21" {}) [nixpkgs.pango] [];
-  gi-gio = addGIDeps (self.callHackage "gi-gio" "2.0.24" {}) [] [];
-  gi-atk = addGIDeps (self.callHackage "gi-atk" "2.0.20" {}) [] [];
-  gi-javascriptcore = addGIDeps (self.callHackage "gi-javascriptcore" "4.0.20" {}) [] [];
-  gi-gdkpixbuf = addGIDeps (self.callHackage "gi-gdkpixbuf" "2.0.22" {}) [nixpkgs.gdk_pixbuf nixpkgs.gtk3] [nixpkgs.gtk3];
-  gi-gdk = addGIDeps (self.callHackage "gi-gdk" "3.0.21" {}) [nixpkgs.gdk_pixbuf nixpkgs.pango nixpkgs.gtk3] [nixpkgs.gtk3];
-  gi-soup = addGIDeps (self.callHackage "gi-soup" "2.4.21" {}) [nixpkgs.gdk_pixbuf] [nixpkgs.libsoup];
-  gi-gtk = addGIDeps (self.callHackage "gi-gtk" "3.0.31" {}) [nixpkgs.gdk_pixbuf nixpkgs.gtk3] [nixpkgs.gtk3 nixpkgs.atk nixpkgs.pango];
-  gi-webkit2 = addGIDeps (self.callHackage "gi-webkit2" "4.0.24" {}) [] [nixpkgs.webkitgtk];
-
-  # Required by butcher
-  deque = self.callHackage "deque" "0.4.2.3" {};
-  strict-list = self.callHackage "strict-list" "0.1.4" {};
+  # Also use an older version suitable for GHC 8.6, because haskell-gi-base ==
+  # 0.24.2 needs a newer compiler. https://github.com/haskell-gi/haskell-gi/issues/304
+  # We also need nixpkgs2003 for older gi* deps. TODO: This should be removed
+  # after GHC is bumped, and the uses of (callHackage "x") can be switched back
+  # to (super.x).
+  haskell-gi-base = addGIDeps (self.callHackage "haskell-gi-base" "0.23.0" {}) [nixpkgs.glib] [];
+  haskell-gi = addGIDeps (self.callHackage "haskell-gi" "0.23.0" {}) [] [];
+  gi-glib = addGIDeps (self.callHackage "gi-glib" "2.0.23" {}) [] [];
+  gi-cairo = addGIDeps (self.callHackage "gi-cairo" "1.0.23" {}) [nixpkgs.cairo] [];
+  gi-gobject = addGIDeps (self.callHackage "gi-gobject" "2.0.22" {}) [] [];
+  gi-pango = addGIDeps (self.callHackage "gi-pango" "1.0.22" {}) [nixpkgs2003.pango] [];
+  gi-gio = addGIDeps (self.callHackage "gi-gio" "2.0.25" {}) [] [];
+  gi-atk = addGIDeps (self.callHackage "gi-atk" "2.0.21" {}) [] [];
+  gi-javascriptcore = addGIDeps (self.callHackage "gi-javascriptcore" "4.0.21" {}) [] [];
+  gi-gdkpixbuf = addGIDeps (self.callHackage "gi-gdkpixbuf" "2.0.23" {}) [nixpkgs2003.gdk_pixbuf nixpkgs2003.gtk3] [nixpkgs2003.gtk3];
+  gi-gdk = addGIDeps (self.callHackage "gi-gdk" "3.0.22" {}) [nixpkgs2003.gdk_pixbuf nixpkgs2003.pango nixpkgs2003.gtk3] [nixpkgs2003.gtk3];
+  gi-soup = addGIDeps (self.callHackage "gi-soup" "2.4.22" {}) [nixpkgs2003.gdk_pixbuf] [nixpkgs2003.libsoup];
+  gi-gtk = addGIDeps (self.callHackage "gi-gtk" "3.0.32" {}) [nixpkgs2003.gdk_pixbuf nixpkgs2003.gtk3] [nixpkgs2003.gtk3 nixpkgs2003.atk nixpkgs2003.pango];
+  gi-webkit2 = addGIDeps (self.callHackage "gi-webkit2" "4.0.25" {}) [] [nixpkgs2003.webkitgtk];
 
   # These take over an hour to run, each
   cryptonite = dontCheck super.cryptonite;
   scientific = dontCheck super.scientific;
-
-  # Packages not yet in 19.03
-  semialign = self.callHackage "semialign" "1.1" {};
-  these = self.callHackage "these" "1.0.1" {};
-  semialign-indexed = self.callHackage "semialign-indexed" "1.1" {}; # to work with semialign 1.1
-  these-lens = doJailbreak (self.callHackage "these-lens" "1" {});
-  # remove jailbreak after https://github.com/isomorphism/these/pull/134
-
-  # Broken in 19.09
-  http-streams = doJailbreak (self.callHackage "http-streams" "0.8.6.1" {});
 
   # pandoc 2.11 and dependencies
   commonmark = self.callHackage "commonmark" "0.1.0.2" {};
@@ -117,10 +90,8 @@ in self: super: {
     self.callCabal2nix "hnix" (nixpkgs.hackGet ./hnix/hnix-store + "/hnix-store-core") {};
   hnix-store-remote =
     self.callCabal2nix "hnix" (nixpkgs.hackGet ./hnix/hnix-store + "/hnix-store-remote") {};
-  algebraic-graphs = self.callHackage "algebraic-graphs" "0.5" {};
-  nix-derivation = self.callHackage "nix-derivation" "1.1.1" {};
   data-fix = self.callHackage "data-fix" "0.3.0" {};
-  neat-interpolation = self.callHackage "neat-interpolation" "0.5.1.2" {};
+  neat-interpolation = self.callHackage "neat-interpolation" "0.4" {};
   prettyprinter = self.callHackage "prettyprinter" "1.7.0" {};
 
 }

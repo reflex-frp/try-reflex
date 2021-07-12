@@ -19,6 +19,17 @@ let
   useTemplateHaskellFlag = lib.optional (!__useTemplateHaskell) "-f-use-template-haskell";
 
   inherit (nixpkgs) stdenv;
+  # Older chromium for reflex-dom-core test suite
+  nixpkgs_oldChromium = import ../../nixpkgs-old-chromium {
+    overlays = [ (self: super: {
+      # Disable tests for p11-kit, a dependency of chromium
+      # They fail on non-NixOS systems
+      # https://github.com/NixOS/nixpkgs/issues/96715
+      p11-kit = super.p11-kit.overrideAttrs (oldAttrs: {
+        doCheck = false;
+      });
+    })];
+  };
 in
 {
   _dep = super._dep or {} // thunkSet ./dep;
@@ -67,10 +78,11 @@ in
         chrome-test-utils
       ];
 
-      testSystemDepends = with nixpkgs; (drv.testSystemDepends or []) ++ [
-        selenium-server-standalone which
+      testSystemDepends = with nixpkgs; (drv.testSystemDepends or []) ++ lib.optionals (nixpkgs.stdenv.hostPlatform.isLinux) [
+        nixpkgs_oldChromium.selenium-server-standalone
+        nixpkgs_oldChromium.chromium
+        which
       ] ++ stdenv.lib.optionals (!noGcTest) [
-        chromium
         nixpkgs.iproute
       ];
     } // stdenv.lib.optionalAttrs (!noGcTest) {
@@ -101,7 +113,7 @@ in
   ## Terminal / Conventional OS
   ##
 
-  reflex-vty = self.callHackage "reflex-vty" "0.1.4.1" {};
+  reflex-vty = self.callCabal2nix "reflex-vty" self._dep.reflex-vty {};
   reflex-process = self.callHackage "reflex-process" "0.3.1.0" {};
   reflex-fsnotify = self.callHackage "reflex-fsnotify" "0.2.1.2" {};
 

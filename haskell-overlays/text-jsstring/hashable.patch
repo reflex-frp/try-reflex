@@ -1,17 +1,18 @@
 diff --git a/Data/Hashable/Class.hs b/Data/Hashable/Class.hs
-index 93470db..f641d40 100644
+index cc9fb87..bdf9cb1 100644
 --- a/Data/Hashable/Class.hs
 +++ b/Data/Hashable/Class.hs
-@@ -1,5 +1,8 @@
- {-# LANGUAGE BangPatterns, CPP, ForeignFunctionInterface, MagicHash,
-              ScopedTypeVariables, UnliftedFFITypes #-}
+@@ -2,6 +2,9 @@
+              ScopedTypeVariables, UnliftedFFITypes, DeriveDataTypeable,
+              DefaultSignatures, FlexibleContexts, TypeFamilies,
+              MultiParamTypeClasses #-}
 +#ifdef __GHCJS__
 +{-# LANGUAGE JavaScriptFFI, UnboxedTuples, GHCForeignImportPrim #-}
 +#endif
  
- #if __GLASGOW_HASKELL__ < 710
- {-# LANGUAGE DeriveDataTypeable #-}
-@@ -75,7 +78,9 @@ import Data.Int (Int8, Int16, Int32, Int64)
+ #if __GLASGOW_HASKELL__ >= 801
+ {-# LANGUAGE PolyKinds #-} -- For TypeRep instances
+@@ -69,7 +72,9 @@ import Data.Int (Int8, Int16, Int32, Int64)
  import Data.List (foldl')
  import Data.Ratio (Ratio, denominator, numerator)
  import qualified Data.Text as T
@@ -21,7 +22,7 @@ index 93470db..f641d40 100644
  import qualified Data.Text.Internal as T
  import qualified Data.Text.Lazy as TL
  import Data.Version (Version(..))
-@@ -90,6 +95,9 @@ import GHC.Prim (ThreadId#)
+@@ -84,6 +89,9 @@ import GHC.Prim (ThreadId#)
  import System.IO.Unsafe (unsafeDupablePerformIO)
  import System.Mem.StableName
  import Data.Unique (Unique, hashUnique)
@@ -31,7 +32,7 @@ index 93470db..f641d40 100644
  
  -- As we use qualified F.Foldable, we don't get warnings with newer base
  import qualified Data.Foldable as F
-@@ -156,7 +164,11 @@ import qualified Data.ByteString.Short.Internal as BSI
+@@ -146,7 +154,11 @@ import qualified Data.ByteString.Short.Internal as BSI
  #  define MIN_VERSION_integer_gmp_1_0_0
  # endif
  
@@ -43,7 +44,7 @@ index 93470db..f641d40 100644
  import GHC.Integer.GMP.Internals (Integer(..))
  # if defined(MIN_VERSION_integer_gmp_1_0_0)
  import GHC.Exts (sizeofByteArray#)
-@@ -629,9 +641,15 @@ instance Hashable BSI.ShortByteString where
+@@ -639,9 +651,15 @@ instance Hashable BSI.ShortByteString where
  #endif
  
  instance Hashable T.Text where
@@ -59,7 +60,7 @@ index 93470db..f641d40 100644
  
  instance Hashable TL.Text where
      hashWithSalt = TL.foldlChunks hashWithSalt
-@@ -829,6 +847,12 @@ instance Hashable a => Hashable (Option a) where
+@@ -851,6 +869,12 @@ instance Hashable a => Hashable (Option a) where
      hashWithSalt p (Option a) = hashWithSalt p a
  #endif
  
@@ -72,22 +73,16 @@ index 93470db..f641d40 100644
  -- instances for @Data.Functor.{Product,Sum,Compose}@, present
  -- in base-4.9 and onward.
  #if MIN_VERSION_base(4,9,0)
-@@ -917,4 +941,3 @@ instance Show1 Hashed where
-   liftShowsPrec sp _ d (Hashed a _) = showsUnaryWith sp "hashed" d a
- #endif
- 
--
 diff --git a/hashable.cabal b/hashable.cabal
-index 74f6512..4182f38 100644
+index e19d056..e442956 100644
 --- a/hashable.cabal
 +++ b/hashable.cabal
-@@ -51,6 +51,9 @@ Library
-   Build-depends:     base >= 4.4 && < 4.12,
-                      bytestring >= 0.9 && < 0.11,
-                      deepseq >= 1.3 && < 1.5
-+
+@@ -57,6 +57,8 @@ Library
+                    , text       >= 0.12     && < 1.3
+                    , ghc-prim
+ 
 +  if impl(ghcjs)
 +    Build-depends:   ghcjs-base
-   if impl(ghc)
-     Build-depends:   ghc-prim,
-                      text >= 0.11.0.5
+   if flag(integer-gmp)
+     Build-depends:   integer-gmp >= 0.4 && < 1.1
+   else
