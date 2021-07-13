@@ -1,0 +1,22 @@
+diff --git a/libraries/unix/config.sub b/libraries/unix/config.sub
+index 40ea5df..f3c3404 100755
+--- a/libraries/unix/config.sub
++++ b/libraries/unix/config.sub
+@@ -118,7 +118,7 @@ case $maybe_os in
+   linux-musl* | linux-uclibc* | uclinux-uclibc* | uclinux-gnu* | kfreebsd*-gnu* | \
+   knetbsd*-gnu* | netbsd*-gnu* | netbsd*-eabi* | \
+   kopensolaris*-gnu* | cloudabi*-eabi* | \
+-  storm-chaos* | os2-emx* | rtmk-nova*)
++  storm-chaos* | os2-emx* | rtmk-nova* | android*)
+     os=-$maybe_os
+     basic_machine=`echo $1 | sed 's/^\(.*\)-\([^-]*-[^-]*\)$/\1/'`
+     ;;
+@@ -1551,6 +1551,8 @@ case $os in
+ 		;;
+ 	-ios)
+ 		;;
++	-android)
++		;;
+ 	-none)
+ 		;;
+ 	*)

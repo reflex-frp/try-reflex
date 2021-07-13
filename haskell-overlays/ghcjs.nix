@@ -30,6 +30,8 @@ self: super: {
   };
 
   ghcjs-base = doJailbreak (dontCheck (self.callCabal2nix "ghcjs-base" self._dep.ghcjsBaseSrc {}));
+  # ghcjs-base needs an older version than nixpkgs provides.
+  primitive = self.callHackage "primitive" "0.6.4.0" {};
 
   ghc = if !(lib.versionAtLeast super.ghc.ghcVersion "8.2") then super.ghc else super.ghc.overrideAttrs (_: {
     # TODO: I don't think this is needed except for maybe the fast-weak patch, but doing this to preserve hashes.

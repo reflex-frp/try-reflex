@@ -484,7 +484,15 @@
     version = "26.4.2";
     repo = "https://maven.google.com/";
     jarSha256 = "7e8e000f063f42f10ca209f51a48b332db1c4d3ac30979cc49c1877ef9e4b7f1";
-    pomSha256 = null;
+    pomSha256 = "1qxr3kv73c0zbf7cgw5dh6alb7j2a3akmxdgb9jp4x3y0510jdwz";
+    aarSha256 = null; }
+
+  { artifactId = "groovy-all";
+    groupId = "org.codehaus.groovy";
+    version = "2.4.15";
+    repo = "https://repo1.maven.org/maven2/";
+    jarSha256 = "1w2siawsbap3aqvp06jynw7ki79majc4k2ci4ds5ds422zkw9mji";
+    pomSha256 = "0yinfr31ybi8c8h0ppf62gqpghrm5a72w71jc82sjz6vgdfm63gw";
     aarSha256 = null; }
 
   { artifactId = "lint-gradle-api";
@@ -705,10 +713,26 @@
 
   { artifactId = "error_prone_annotations";
     groupId = "com.google.errorprone";
+    version = "2.1.3";
+    repo = "https://repo1.maven.org/maven2/";
+    jarSha256 = "1y3zzjqxckrn39z5d4724lwhkb9fx94i0kb3gkhsjgf18yak5l03";
+    pomSha256 = "1x9pfan53fjf9sg2lrwi6g2dvs2b99x8d7ka7in9kciw74fbi34m";
+    aarSha256 = null; }
+
+  { artifactId = "error_prone_annotations";
+    groupId = "com.google.errorprone";
     version = "2.2.0";
     repo = "https://jcenter.bintray.com/";
     jarSha256 = "6ebd22ca1b9d8ec06d41de8d64e0596981d9607b42035f9ed374f9de271a481a";
     pomSha256 = "5e0258ea1ba4e51a133742680bc22448f7ab214be4073e8619f645ef1be42dd5";
+    aarSha256 = null; }
+
+  { artifactId = "error_prone_parent";
+    groupId = "com.google.errorprone";
+    version = "2.1.3";
+    repo = "https://repo1.maven.org/maven2/";
+    jarSha256 = null;
+    pomSha256 = "16r3zfxxcz6ldykibcs7r7qbvwc81dw7msg03nawx7rql4b2canm";
     aarSha256 = null; }
 
   { artifactId = "error_prone_parent";

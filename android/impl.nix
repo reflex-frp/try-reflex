@@ -14,7 +14,7 @@ let overrideAndroidCabal = package: overrideCabal package (drv: {
         substitute ${./deploy.sh} $out/bin/deploy \
           --subst-var-by coreutils ${nixpkgs.coreutils} \
           --subst-var-by adb ${androidenv.androidPkgs_9_0.platform-tools} \
-          --subst-var-by java ${nixpkgs.openjdk12} \
+          --subst-var-by java ${nixpkgs.openjdk11} \
           --subst-var-by out $out
         chmod +x "$out/bin/deploy"
       '';

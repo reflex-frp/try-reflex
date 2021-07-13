@@ -1,8 +1,8 @@
 {
   "owner": "reflex-frp",
   "repo": "reflex-dom",
-  "branch": "release/0.6.2.0",
+  "branch": "ts@tiny-test-fixes",
   "private": false,
-  "rev": "6a7782a61e90e7369a8278441eb47f702bb7c63b",
-  "sha256": "13y2h9cqhll55qgk7x33wnz88822irkdxych1c0fbw20jghhp96h"
+  "rev": "06ac0a83b680e497b0afe0a1dc863b9aa153834b",
+  "sha256": "0dlp71n06zgcnj6s04vmd3pca8smb8lav2a7ffax9ykfc6vfzvf4"
 }

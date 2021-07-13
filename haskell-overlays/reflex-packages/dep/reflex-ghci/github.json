@@ -1,0 +1,8 @@
+{
+  "owner": "reflex-frp",
+  "repo": "reflex-ghci",
+  "branch": "ts@ghc-8.10",
+  "private": false,
+  "rev": "5813efa4e3256d8102bafad100e8f5ec2d51c2f2",
+  "sha256": "1vs0v2ms9v58ismx946y7341a4w8z611x50654p9mqa2zwcj5f6w"
+}
