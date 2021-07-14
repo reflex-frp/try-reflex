@@ -15,6 +15,17 @@
 , haskellOverlaysPost ? haskellOverlays
 , hideDeprecated ? false # The moral equivalent of "-Wcompat -Werror" for using reflex-platform.
 }:
+
+let config'= config // {
+      permittedInsecurePackages = (config.permittedInsecurePackages or []) ++ [
+        "chromium-81.0.4044.138"
+        "chromium-unwrapped-81.0.4044.138"
+      ];
+    };
+in
+let config = config';
+in
+
 let iosSupport = system == "x86_64-darwin";
     androidSupport = lib.elem system [ "x86_64-linux" ];
 
@@ -101,15 +112,15 @@ let iosSupport = system == "x86_64-darwin";
         allCabalHashesOverlay
         (import ./nixpkgs-overlays/ghc.nix { inherit lib; })
       ] ++ nixpkgsOverlays;
-      config = {
-        permittedInsecurePackages = [
+      config = config // {
+        permittedInsecurePackages = (config.permittedInsecurePackages or []) ++ [
           "webkitgtk-2.4.11"
         ];
 
         # XCode needed for native macOS app
         # Obelisk needs it to for some reason
         allowUnfree = true;
-      } // config;
+      };
     };
 
     nixpkgs = nixpkgsFunc nixpkgsArgs;

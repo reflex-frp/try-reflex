@@ -19,6 +19,8 @@ let
   useTemplateHaskellFlag = lib.optional (!__useTemplateHaskell) "-f-use-template-haskell";
 
   inherit (nixpkgs) stdenv;
+  # Older chromium for reflex-dom-core test suite
+  nixpkgs_oldChromium = import ../../nixpkgs-old-chromium {};
 in
 {
   _dep = super._dep or {} // thunkSet ./dep;
@@ -67,10 +69,11 @@ in
         chrome-test-utils
       ];
 
-      testSystemDepends = with nixpkgs; (drv.testSystemDepends or []) ++ [
-        selenium-server-standalone which
+      testSystemDepends = with nixpkgs; (drv.testSystemDepends or []) ++ lib.optionals (nixpkgs.stdenv.hostPlatform.isLinux) [
+        nixpkgs_oldChromium.selenium-server-standalone
+        nixpkgs_oldChromium.chromium
+        which
       ] ++ stdenv.lib.optionals (!noGcTest) [
-        chromium
         nixpkgs.iproute
       ];
     } // stdenv.lib.optionalAttrs (!noGcTest) {
