@@ -35,7 +35,7 @@ in {
     buildFlags = lib.optional (hasSplicedPkg drv) "--ghc-option=-load-splices=${spliceDir drv}"
               ++ (drv.buildFlags or []);
     preBuild = ''
-      ${drv.preConfigure or ""}
+      ${drv.preBuild or ""}
       echo "!!! has splices: ${if hasSplicedPkg drv then "yes" else "no"}"
       echo "!!! splices at: ${if hasSplicedPkg drv then spliceDir drv else "N/A"} !!!"
     '';
